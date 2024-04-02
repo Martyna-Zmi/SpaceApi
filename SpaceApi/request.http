@@ -1,10 +1,10 @@
-GET http://localhost:5075/spaceAPI/stars/1
+GET http://localhost:5075/space-api/stars/1
 ###
 
-GET http://localhost:5075/spaceAPI/stars
+GET http://localhost:5075/space-api/stars
 ###
 
-POST http://localhost:5075/spaceAPI/stars
+POST http://localhost:5075/space-api/stars
 Content-Type: application/json
 
 {
@@ -16,7 +16,7 @@ Content-Type: application/json
 }
 ###
 
-PUT http://localhost:5075/spaceAPI/stars/3
+PUT http://localhost:5075/space-api/stars/3
 Content-Type: application/json
 
 {
@@ -27,12 +27,43 @@ Content-Type: application/json
     "radius": 11.98,
     "planets":[
         {
-        "id": 1,
+        "id": 4,
         "name": "MyPlanet",
-        "isRocky": true
+        "isRocky": true,
+        "starId": 0
         }
     ]
 }
 ###
 
-DELETE http://localhost:5075/spaceAPI/stars/3
+DELETE http://localhost:5075/space-api/stars/3
+###
+
+GET http://localhost:5075/space-api/planets
+###
+
+GET http://localhost:5075/space-api/planets/0
+###
+
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "id": 2,
+    "name": "Neptu",
+    "isRocky": false,
+    "starId": 0
+}
+###
+
+PUT http://localhost:5075/space-api/planets/2
+Content-Type: application/json
+
+{
+    "id": 2,
+    "name": "Neptune",
+    "isRocky": false,
+    "starId": 0
+}
+###
+DELETE http://localhost:5075/space-api/planets/2

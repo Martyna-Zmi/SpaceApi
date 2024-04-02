@@ -5,4 +5,5 @@ namespace SpaceApi.Dtos;
 public record PlanetDto(
     int Id, 
     [Required] [MaxLength(100)] string Name, 
-    [Required] bool IsRocky);
+    [Required] bool IsRocky,
+    int StarId);

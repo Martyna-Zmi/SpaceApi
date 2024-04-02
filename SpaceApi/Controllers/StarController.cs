@@ -5,12 +5,12 @@ using SpaceApi.Entities;
 namespace SpaceApi.Controllers;
 
 [ApiController]
-[Route("spaceAPI/stars")]
+[Route("space-api/stars")]
 public class StarController : ControllerBase
 {
     //Temporary List - delete after database creation and implementation
     public List<StarDto> TemporatyStars = new List<StarDto>([
-        new StarDto(0, "Sun", "Sun", -26.7F, 1, new List<PlanetDto>([new PlanetDto(0, "Earth", true)])),
+        new StarDto(0, "Sun", "Sun", -26.7F, 1, new List<PlanetDto>([new PlanetDto(0, "Earth", true, 0)])),
         new StarDto(1, "Sirius A", "Alpha Canis Majoris [A]", -1.46F, 1.711, new List<PlanetDto>()),
         new StarDto(2, "Alpha Centauri A", "Alpha Centauri [A]", 1.33F, 1.1, new List<PlanetDto>())]);
 
