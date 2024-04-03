@@ -29,8 +29,8 @@ Content-Type: application/json
         {
         "id": 4,
         "name": "MyPlanet",
-        "isRocky": true,
-        "starId": 0
+        "is_rocky": true,
+        "star_id": 0
         }
     ]
 }
@@ -51,8 +51,8 @@ Content-Type: application/json
 {
     "id": 2,
     "name": "Neptu",
-    "isRocky": false,
-    "starId": 0
+    "is_rocky": false,
+    "star_id": 0
 }
 ###
 
@@ -62,8 +62,8 @@ Content-Type: application/json
 {
     "id": 2,
     "name": "Neptune",
-    "isRocky": false,
-    "starId": 0
+    "is_rocky": false,
+    "star_id": 0
 }
 ###
 DELETE http://localhost:5075/space-api/planets/2
