@@ -37,7 +37,7 @@ public class PlanetController: ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<PlanetDto> PutPlanet(int id, PlanetDto putInfo){
         PlanetDto? planet = TemporaryPlanets.Find(planet => planet.Id == id);
-        if(TemporaryPlanets.Find(planet=>planet.Id == id)==null) return BadRequest("Reason: Couldn't modify because such planet doesn't exist");
+        if(planet==null) return BadRequest("Reason: Couldn't modify because such planet doesn't exist");
         TemporaryPlanets.Remove(planet);
         TemporaryPlanets.Add(putInfo);
         return Ok(putInfo);
