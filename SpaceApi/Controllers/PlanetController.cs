@@ -8,7 +8,7 @@ namespace SpaceApi.Controllers;
 public class PlanetController: ControllerBase
 {
     //Temporary List - delete after database creation and implementation
-    public List<PlanetDto> TemporaryPlanets = new List<PlanetDto>([new PlanetDto(0, "Earth", true, 0), new PlanetDto(1, "Jupiter", false, 0)]);
+    public static List<PlanetDto> TemporaryPlanets = new List<PlanetDto>([new PlanetDto(0, "Earth", true, 0), new PlanetDto(1, "Jupiter", false, 0)]);
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<PlanetDto> GetAllPlanets(){
@@ -18,8 +18,11 @@ public class PlanetController: ControllerBase
     [HttpGet]
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<PlanetDto> GetPlanet(int id){
-        return Ok(TemporaryPlanets.Find(planet => planet.Id == id));
+        PlanetDto? planet = TemporaryPlanets.Find(planet => planet.Id == id);
+        if(planet == null) return NotFound("Reason: Couldn't find a planet with such id");
+        return Ok(planet);
     }
 
     [HttpPost]
@@ -31,9 +34,11 @@ public class PlanetController: ControllerBase
     [HttpPut]
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<PlanetDto> PutPlanet(int id, PlanetDto putInfo){
-        PlanetDto item = TemporaryPlanets.Find(planet => planet.Id == id); //no validation just yet
-        TemporaryPlanets.Remove(item);
+        PlanetDto? planet = TemporaryPlanets.Find(planet => planet.Id == id);
+        if(TemporaryPlanets.Find(planet=>planet.Id == id)==null) return BadRequest("Reason: Couldn't modify because such planet doesn't exist");
+        TemporaryPlanets.Remove(planet);
         TemporaryPlanets.Add(putInfo);
         return Ok(putInfo);
     }
@@ -41,8 +46,11 @@ public class PlanetController: ControllerBase
     [HttpDelete]
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<PlanetDto> DeletePlanet(int id){
-        TemporaryPlanets.Remove(TemporaryPlanets.Find(planet=>planet.Id == id)); //no validation just yet
+        PlanetDto? planet = TemporaryPlanets.Find(planet=>planet.Id == id);
+        if(planet == null) return NotFound("Reason: Couldn't delete because such planet doesn't exist");
+        TemporaryPlanets.Remove(planet);
         return Ok();
     }
 }
