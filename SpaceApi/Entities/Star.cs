@@ -7,5 +7,5 @@ public class Star
     public required string Alias { get; set; }
     public float Brightness { get; set; }
     public double Radius { get; set; }
-    public List<Planet>? Planets { get; set;}
+    public ICollection<Planet>? Planets { get; set;} = [];
 }

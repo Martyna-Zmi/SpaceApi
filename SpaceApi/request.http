@@ -11,7 +11,7 @@ Content-Type: application/json
 
 {
     "name": "Sun",
-    "alias": "Sun",
+    "alias": "Sol",
     "brightness": 1,
     "radius": 1
 }
@@ -24,7 +24,7 @@ Content-Type: application/json
     "name": "Sun",
     "alias": "Sol",
     "brightness": 0.08,
-    "radius": 1
+    "radius": 10
 }
 ###
 
@@ -34,7 +34,7 @@ DELETE http://localhost:5075/space-api/stars/1
 GET http://localhost:5075/space-api/planets
 ###
 
-GET http://localhost:5075/space-api/planets/0
+GET http://localhost:5075/space-api/planets/1
 ###
 
 POST http://localhost:5075/space-api/planets

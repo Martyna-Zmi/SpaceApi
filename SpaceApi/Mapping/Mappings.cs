@@ -21,18 +21,24 @@ public static class Mappings
     }
     public static StarDto EntityToDto(this Star star)
     {
-        List<PlanetDto>? planets = (star.Planets==null)? null: star.Planets.ConvertAll<PlanetDto>(planet => planet.EntityToDto());
-        return new StarDto(star.Id, star.Name, star.Alias, star.Brightness, star.Radius, planets);
+        List<PlanetDto> planetDtos = [];
+        if (star.Planets != null)
+        {
+            foreach (var planet in star.Planets)
+            {
+                planetDtos.Add(planet.EntityToDto());
+            }
+        }
+        return new StarDto(star.Id, star.Name, star.Alias, star.Brightness, star.Radius, planetDtos);
     }
-    public static Star DtoToEntity(this StarDto starDto){
-        List<Planet>? planets = (starDto.Planets==null)? null: starDto.Planets.ConvertAll<Planet>(planet=>planet.DtoToEntity());
+    public static Star SummaryDtoToEntity(this StarSummaryDto starDto)
+    {
         var star = new Star
         {
             Name = starDto.Name,
             Alias = starDto.Alias,
             Brightness = starDto.Brightness,
             Radius = starDto.Radius,
-            Planets = planets
         };
         return star;
     }

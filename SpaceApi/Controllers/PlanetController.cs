@@ -37,12 +37,14 @@ public class PlanetController: ControllerBase
         star.Planets.Add(planet);
         dbContext.Stars.Update(star);
         dbContext.SaveChanges();
-        return CreatedAtAction(nameof(GetPlanet), new {id = planetToCreate.Id}, planetToCreate);
+        Planet? fromDb = dbContext.Planets.FirstOrDefault(planetSearch=> planetSearch.Name==planet.Name);
+        if(fromDb == null) return BadRequest();
+        return Created(nameof(GetPlanet), new {fromDb.Id});
     }
 
     [HttpPut]
     [Route("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public ActionResult<PlanetDto> PutPlanet(int id, PlanetDto putInfo, SpaceContext dbContext){
         Planet? planetFound = dbContext.Planets.Find(id);
@@ -50,21 +52,22 @@ public class PlanetController: ControllerBase
         planetFound.Name = putInfo.Name;
         planetFound.IsRocky = putInfo.IsRocky;
         planetFound.StarId = putInfo.Star_id;
-        planetFound.Star = dbContext.Stars.Find(putInfo.Star_id);
+        var star = dbContext.Stars.Find(putInfo.Star_id);
+        if(star!=null)planetFound.Star = star;
         dbContext.Planets.Update(planetFound);
         dbContext.SaveChanges();
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete]
     [Route("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<PlanetDto> DeletePlanet(int id, SpaceContext dbContext){
         Planet? planetFound = dbContext.Planets.Find(id);
         if(planetFound == null) return NotFound("Reason: Couldn't delete because such planet doesn't exist");
         dbContext.Planets.Remove(planetFound);
         dbContext.SaveChanges();
-        return Ok();
+        return NoContent();
     }
 }

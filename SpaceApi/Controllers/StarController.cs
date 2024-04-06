@@ -19,7 +19,12 @@ public class StarController : ControllerBase
     {
         var starFound = dbContext.Stars.Find(id);
         if(starFound == null) return NotFound("Reason: Couldn't find a star with such id");
-        return Ok(starFound.EntityToDto());
+        var planets = from p in dbContext.Planets
+                   where p.StarId.Equals(id)
+                   select p;
+        starFound.Planets = planets.Select(p => new Planet(p.Id, p.Name, p.IsRocky, p.StarId, p.Star)).ToList();
+        StarDto dto = starFound.EntityToDto();
+        return Ok(dto);
     }
 
     [HttpGet]
@@ -31,20 +36,23 @@ public class StarController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public ActionResult<StarDto> PostStar(StarDto starToCreate, SpaceContext dbContext)
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public ActionResult<StarDto> PostStar(StarSummaryDto starToCreate, SpaceContext dbContext)
     {
-        Star star = starToCreate.DtoToEntity();
+        Star star = starToCreate.SummaryDtoToEntity();
         dbContext.Stars.Add(star);
         if(star.Planets != null) dbContext.Planets.AddRange(star.Planets);
         dbContext.SaveChanges();
-        return CreatedAtAction(nameof(GetStar), new { id = starToCreate.Id }, starToCreate);
+        Star? fromDb = dbContext.Stars.FirstOrDefault(starSearch=> starSearch.Name==star.Name);
+        if(fromDb == null) return BadRequest();
+        return Created(nameof(GetStar), new {fromDb.Id});
     }
 
     [HttpPut]
     [Route("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<StarDto> PutStar(int id, StarDto putInfo, SpaceContext dbContext)
+    public ActionResult<StarDto> PutStar(int id, StarSummaryDto putInfo, SpaceContext dbContext)
     {
         var starFound = dbContext.Stars.Find(id);
         if(starFound == null) return BadRequest("Reason: Couldn't modify because this star doesn't exist");
@@ -54,12 +62,12 @@ public class StarController : ControllerBase
         starFound.Radius = putInfo.Radius;
         dbContext.Stars.Update(starFound);
         dbContext.SaveChanges();
-        return Ok();
+        return NoContent();
     }
 
     [HttpDelete]
     [Route("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public ActionResult<StarDto> DeleteStar(int id, SpaceContext dbContext)
     {
@@ -67,6 +75,6 @@ public class StarController : ControllerBase
         if(star == null) return NotFound("Reason: Couln't delete because such star doesn't exist");
         dbContext.Stars.Remove(star);
         dbContext.SaveChanges();
-        return Ok();
+        return NoContent();
     }
 }

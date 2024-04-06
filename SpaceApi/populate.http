@@ -1,0 +1,138 @@
+//data for testing
+POST http://localhost:5075/space-api/stars
+Content-Type: application/json
+
+{
+    "name": "Sun",
+    "alias": "Sol",
+    "brightness": -26.74,
+    "radius": 1
+}
+###
+
+POST http://localhost:5075/space-api/stars
+Content-Type: application/json
+
+{
+    "name": "Hammal",
+    "alias": "Alpha Arietis",
+    "brightness": 2.00,
+    "radius": 14.9
+}
+###
+
+POST http://localhost:5075/space-api/stars
+Content-Type: application/json
+
+{
+    "name": "Proxima Centauri",
+    "alias": "Alpha Centauri C",
+    "brightness": 10.43,
+    "radius": 0.1542
+}
+###
+
+POST http://localhost:5075/space-api/stars
+Content-Type: application/json
+
+{
+    "name": "Teegarden's Star",
+    "alias": "Teegarden",
+    "brightness": 15.13,
+    "radius": 0.12
+}
+###
+
+POST http://localhost:5075/space-api/stars
+Content-Type: application/json
+
+{
+    "name": "TRAPPIST-1",
+    "alias": "TRAPPIST-1",
+    "brightness": 18.79,
+    "radius": 0.1192
+}
+###
+
+POST http://localhost:5075/space-api/stars
+Content-Type: application/json
+
+{
+    "name": "Aldebaran",
+    "alias": "Alpha Tauri",
+    "brightness": 0.86,
+    "radius": 45.1
+}
+###
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "name": "Earth",
+    "is_rocky": true,
+    "star_id": 1
+}
+###
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "name": "Jupiter",
+    "is_rocky": false,
+    "star_id": 1
+}
+###
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "name": "Neptune",
+    "is_rocky": false,
+    "star_id": 1
+}
+###
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "name": "Alpha Arietis b",
+    "is_rocky": false,
+    "star_id": 2
+}
+###
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "name": "Proxima Centauri b",
+    "is_rocky": true,
+    "star_id": 3
+}
+###
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "name": "Teegarten's Star b",
+    "is_rocky": true,
+    "star_id": 4
+}
+###
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "name": "TRAPPIST-1 b",
+    "is_rocky": true,
+    "star_id": 5
+}
+###
+POST http://localhost:5075/space-api/planets
+Content-Type: application/json
+
+{
+    "name": "Alpha Tauri b",
+    "is_rocky": false,
+    "star_id": 6
+}
+###
