@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SpaceApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+13ad51c06685e85b94a49f9b8222c029063cd379")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d0f0afea82a18e178d227887dd3b985b1314d6d9")]
 [assembly: System.Reflection.AssemblyProductAttribute("SpaceApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SpaceApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
