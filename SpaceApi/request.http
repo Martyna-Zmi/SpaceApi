@@ -1,3 +1,5 @@
+//Needs updating - scientifically incorrect info just for testing
+
 GET http://localhost:5075/space-api/stars/1
 ###
 
@@ -8,35 +10,25 @@ POST http://localhost:5075/space-api/stars
 Content-Type: application/json
 
 {
-    "id": 3,
-    "name": "Capella",
-    "alias": "Alpha Aurigae",
-    "brightness": 0.08,
-    "radius": 11.9
+    "name": "Sun",
+    "alias": "Sun",
+    "brightness": 1,
+    "radius": 1
 }
 ###
 
-PUT http://localhost:5075/space-api/stars/3
+PUT http://localhost:5075/space-api/stars/1
 Content-Type: application/json
 
 {
-    "id": 3,
-    "name": "Capella Aa",
-    "alias": "Alpha Aurigae [Aa]",
+    "name": "Sun",
+    "alias": "Sol",
     "brightness": 0.08,
-    "radius": 11.98,
-    "planets":[
-        {
-        "id": 4,
-        "name": "MyPlanet",
-        "is_rocky": true,
-        "star_id": 0
-        }
-    ]
+    "radius": 1
 }
 ###
 
-DELETE http://localhost:5075/space-api/stars/3
+DELETE http://localhost:5075/space-api/stars/1
 ###
 
 GET http://localhost:5075/space-api/planets
@@ -49,10 +41,9 @@ POST http://localhost:5075/space-api/planets
 Content-Type: application/json
 
 {
-    "id": 2,
     "name": "Neptu",
     "is_rocky": false,
-    "star_id": 0
+    "star_id": 1
 }
 ###
 
@@ -60,11 +51,10 @@ PUT http://localhost:5075/space-api/planets/1
 Content-Type: application/json
 
 {
-    "id": 1,
     "name": "Neptune",
     "is_rocky": false,
-    "star_id": 0
+    "star_id": 1
 }
 ###
 
-DELETE http://localhost:5075/space-api/planets/2
+DELETE http://localhost:5075/space-api/planets/1

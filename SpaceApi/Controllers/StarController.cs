@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SpaceApi.Data;
 using SpaceApi.Dtos;
 using SpaceApi.Entities;
+using SpaceApi.Mapping;
 
 namespace SpaceApi.Controllers;
 
@@ -8,36 +11,32 @@ namespace SpaceApi.Controllers;
 [Route("space-api/stars")]
 public class StarController : ControllerBase
 {
-    //Temporary List - delete after database creation and implementation
-    public static List<StarDto> TemporatyStars = new List<StarDto>{
-        new StarDto(0, "Sun", "Sun", -26.7F, 1, new List<PlanetDto>([new PlanetDto(0, "Earth", true, 0)])),
-        new StarDto(1, "Sirius A", "Alpha Canis Majoris [A]", -1.46F, 1.711, new List<PlanetDto>()),
-        new StarDto(2, "Alpha Centauri A", "Alpha Centauri [A]", 1.33F, 1.1, new List<PlanetDto>())};
-
     [HttpGet]
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<StarDto> GetStar(int id)
+    public ActionResult<StarDto> GetStar(int id, SpaceContext dbContext)
     {
-        var starFound = TemporatyStars.Find(star=>star.Id==id);
-        if(starFound==null) return NotFound("Reason: Couldn't find a star with such id");
-        return Ok(starFound);
+        var starFound = dbContext.Stars.Find(id);
+        if(starFound == null) return NotFound("Reason: Couldn't find a star with such id");
+        return Ok(starFound.EntityToDto());
     }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<List<StarDto>> GetAllStars()
+    public ActionResult<List<StarDto>> GetAllStars(SpaceContext dbContext)
     {
-        return Ok(TemporatyStars);
+        return Ok(dbContext.Stars.Include(star=>star.Planets).Select(star => star.EntityToDto()).ToList());
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-
-    public ActionResult<StarDto> PostStar(StarDto starToCreate)
+    public ActionResult<StarDto> PostStar(StarDto starToCreate, SpaceContext dbContext)
     {
-        TemporatyStars.Add(starToCreate);
+        Star star = starToCreate.DtoToEntity();
+        dbContext.Stars.Add(star);
+        if(star.Planets != null) dbContext.Planets.AddRange(star.Planets);
+        dbContext.SaveChanges();
         return CreatedAtAction(nameof(GetStar), new { id = starToCreate.Id }, starToCreate);
     }
 
@@ -45,24 +44,29 @@ public class StarController : ControllerBase
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<StarDto> PutStar(int id, StarDto putInfo)
+    public ActionResult<StarDto> PutStar(int id, StarDto putInfo, SpaceContext dbContext)
     {
-        var starFound = TemporatyStars.Find(star => star.Id==id);
+        var starFound = dbContext.Stars.Find(id);
         if(starFound == null) return BadRequest("Reason: Couldn't modify because this star doesn't exist");
-        TemporatyStars.Remove(starFound);
-        TemporatyStars.Add(putInfo);
-        return Ok(putInfo);
+        starFound.Name = putInfo.Name;
+        starFound.Alias = putInfo.Alias;
+        starFound.Brightness = putInfo.Brightness;
+        starFound.Radius = putInfo.Radius;
+        dbContext.Stars.Update(starFound);
+        dbContext.SaveChanges();
+        return Ok();
     }
 
     [HttpDelete]
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<StarDto> DeleteStar(int id)
+    public ActionResult<StarDto> DeleteStar(int id, SpaceContext dbContext)
     {
-        StarDto? star = TemporatyStars.Find(star => star.Id == id);
+        var star = dbContext.Stars.Find(id);
         if(star == null) return NotFound("Reason: Couln't delete because such star doesn't exist");
-        TemporatyStars.Remove(star);
+        dbContext.Stars.Remove(star);
+        dbContext.SaveChanges();
         return Ok();
     }
 }

@@ -5,7 +5,7 @@ public class Star
     public int Id { get; set; }
     public required string Name { get; set; }
     public required string Alias { get; set; }
-    public required float Brightness { get; set; }
-    public required double Radius { get; set; }
-    public IList<Planet>? Planets { get; set;}
+    public float Brightness { get; set; }
+    public double Radius { get; set; }
+    public List<Planet>? Planets { get; set;}
 }
