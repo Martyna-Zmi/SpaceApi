@@ -15,9 +15,9 @@ public class StarController : ControllerBase
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<StarDto> GetStar(int id, SpaceContext dbContext)
+    public async Task<ActionResult<StarDto>> GetStar(int id, SpaceContext dbContext)
     {
-        var starFound = dbContext.Stars.Find(id);
+        var starFound = await dbContext.Stars.FindAsync(id);
         if(starFound == null) return NotFound("Reason: Couldn't find a star with such id");
         var planets = from p in dbContext.Planets
                    where p.StarId.Equals(id)
@@ -29,21 +29,22 @@ public class StarController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<List<StarDto>> GetAllStars(SpaceContext dbContext)
+    public async Task<ActionResult<List<StarDto>>> GetAllStars(SpaceContext dbContext)
     {
-        return Ok(dbContext.Stars.Include(star=>star.Planets).Select(star => star.EntityToDto()).ToList());
+        var found = await dbContext.Stars.Include(star=>star.Planets).Select(star => star.EntityToDto()).ToListAsync();
+        return Ok(found);
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<StarDto> PostStar(StarSummaryDto starToCreate, SpaceContext dbContext)
+    public async Task<ActionResult<StarDto>> PostStar(StarSummaryDto starToCreate, SpaceContext dbContext)
     {
         Star star = starToCreate.SummaryDtoToEntity();
-        dbContext.Stars.Add(star);
+        await dbContext.Stars.AddAsync(star);
         if(star.Planets != null) dbContext.Planets.AddRange(star.Planets);
-        dbContext.SaveChanges();
-        Star? fromDb = dbContext.Stars.FirstOrDefault(starSearch=> starSearch.Name==star.Name);
+        await dbContext.SaveChangesAsync();
+        Star? fromDb = await dbContext.Stars.FirstOrDefaultAsync(starSearch=> starSearch.Name==star.Name);
         if(fromDb == null) return BadRequest();
         return Created(nameof(GetStar), new {fromDb.Id});
     }
@@ -52,16 +53,16 @@ public class StarController : ControllerBase
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public ActionResult<StarDto> PutStar(int id, StarSummaryDto putInfo, SpaceContext dbContext)
+    public async Task<ActionResult<StarDto>> PutStar(int id, StarSummaryDto putInfo, SpaceContext dbContext)
     {
-        var starFound = dbContext.Stars.Find(id);
+        var starFound = await dbContext.Stars.FindAsync(id);
         if(starFound == null) return BadRequest("Reason: Couldn't modify because this star doesn't exist");
         starFound.Name = putInfo.Name;
         starFound.Alias = putInfo.Alias;
         starFound.Brightness = putInfo.Brightness;
         starFound.Radius = putInfo.Radius;
         dbContext.Stars.Update(starFound);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return NoContent();
     }
 
@@ -69,12 +70,12 @@ public class StarController : ControllerBase
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<StarDto> DeleteStar(int id, SpaceContext dbContext)
+    public async Task<ActionResult<StarDto>> DeleteStar(int id, SpaceContext dbContext)
     {
-        var star = dbContext.Stars.Find(id);
+        var star = await dbContext.Stars.FindAsync(id);
         if(star == null) return NotFound("Reason: Couln't delete because such star doesn't exist");
         dbContext.Stars.Remove(star);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return NoContent();
     }
 }
