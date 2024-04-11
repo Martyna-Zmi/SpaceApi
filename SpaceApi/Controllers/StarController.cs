@@ -17,12 +17,8 @@ public class StarController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<StarDto>> GetStar(int id, SpaceContext dbContext)
     {
-        var starFound = await dbContext.Stars.FindAsync(id);
+        var starFound = await dbContext.Stars.Include(star=>star.Planets).FirstOrDefaultAsync(star=>star.Id==id);
         if(starFound == null) return NotFound("Reason: Couldn't find a star with such id");
-        var planets = from p in dbContext.Planets
-                   where p.StarId.Equals(id)
-                   select p;
-        starFound.Planets = planets.Select(p => new Planet(p.Id, p.Name, p.IsRocky, p.StarId, p.Star)).ToList();
         StarDto dto = starFound.EntityToDto();
         return Ok(dto);
     }
@@ -44,9 +40,8 @@ public class StarController : ControllerBase
         await dbContext.Stars.AddAsync(star);
         if(star.Planets != null) dbContext.Planets.AddRange(star.Planets);
         await dbContext.SaveChangesAsync();
-        Star? fromDb = await dbContext.Stars.FirstOrDefaultAsync(starSearch=> starSearch.Name==star.Name);
-        if(fromDb == null) return BadRequest();
-        return Created(nameof(GetStar), new {fromDb.Id});
+        var id = star.Id;
+        return Created(nameof(GetStar), new {id});
     }
 
     [HttpPut]
